@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListEmepleadoTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <h:form id="EmepleadoListForm">
+                <p:panel header="#{bundle.ListEmepleadoTitle}">
+                    <p:dataTable id="datalist" value="#{emepleadoController.items}" var="item"
+                                 selectionMode="single" selection="#{emepleadoController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.idEmepleado}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 >
+
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListEmepleadoTitle_idEmepleado}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.idEmepleado}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListEmepleadoTitle_nombre}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nombre}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListEmepleadoTitle_idDepartamento}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.idDepartamento}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{emepleadoController.prepareCreate}" update=":EmepleadoCreateForm" oncomplete="PF('EmepleadoCreateDialog').show()"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":EmepleadoViewForm" oncomplete="PF('EmepleadoViewDialog').show()" disabled="#{empty emepleadoController.selected}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EmepleadoEditForm" oncomplete="PF('EmepleadoEditDialog').show()" disabled="#{empty emepleadoController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{emepleadoController.destroy}" update=":growl,datalist" disabled="#{empty emepleadoController.selected}"> 
+                                <p:confirm header="Confirmacion" message="Esta seguro de eliminar?" icon="pi pi-exclamation-triangle"/>
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                             <p:commandButton value="SI ELIMINAR" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>         
+                                             <p:commandButton value="CANCELAR" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-check"/>      
+                            </p:confirmDialog>              
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="Create.xhtml"/>
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>
